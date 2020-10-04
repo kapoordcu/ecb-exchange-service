@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: ecb-exchange-service
+  http:
+    log-request-details: true
+
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+    deserialization:
+      FAIL_ON_UNKNOWN_PROPERTIES: false
+server:
+  port: 9000
+
+management:
+  server:
+    port: 9001
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      base-path: /-system
+      exposure:
+        include: ["metrics", "health", "info", "prometheus", "configprops"]
+  health:
+    redis:
+      enabled: false
+
+cache:
+  redis:
+    host: profiles.dev.irl.aws.tipicodev.com
+    port: 6379
+    ttl: 3600 # sec
+
+client:
+  ecb:
+    daily-rate-uri: https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml
+    root-element: gesmes:Envelope
+    data-element: Cube
