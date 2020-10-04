@@ -39,3 +39,5 @@ client:
     daily-rate-uri: https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml
     root-element: gesmes:Envelope
     data-element: Cube
+    rate: rate
+    currency: currency

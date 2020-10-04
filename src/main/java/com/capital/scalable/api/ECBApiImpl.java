@@ -42,7 +42,6 @@ public class ECBApiImpl implements ECBApi {
 
 
     private boolean ratesChanged() {
-
         return false;
     }
 }

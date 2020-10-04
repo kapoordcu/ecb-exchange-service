@@ -9,20 +9,34 @@ public class WebClientConfiguration {
     private String ecbURI;
 
     @Value("${client.ecb.root-element:'gesmes:Envelope'}")
-    private String rootElement;
+    private String rootNode;
 
     @Value("${client.ecb.data-element:Cube}")
-    private String dataElement;
+    private String dataNode;
+
+    @Value("${client.ecb.rate:rate}")
+    private String rateLabel;
+
+    @Value("${client.ecb.currency:currency}")
+    private String currencyLabel;
 
     public String getEcbURI() {
         return ecbURI;
     }
 
-    public String getRootElement() {
-        return rootElement;
+    public String getRootNode() {
+        return rootNode;
     }
 
-    public String getDataElement() {
-        return dataElement;
+    public String getDataNode() {
+        return dataNode;
+    }
+
+    public String getRateLabel() {
+        return rateLabel;
+    }
+
+    public String getCurrencyLabel() {
+        return currencyLabel;
     }
 }
