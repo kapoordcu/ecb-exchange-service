@@ -1,31 +1,31 @@
 package com.capital.scalable.domain;
 
 public class CurrencyPair {
-    private String from;
-    private String to;
-    private double amountFrom;
-    private double amountTo;
+    private String fromCurrency;
+    private String toCurrency;
+    private double fromAmount;
+    private double toAmount;
 
-    public CurrencyPair(String from, String to, double amountFrom, double amountTo) {
-        this.from = from;
-        this.to = to;
-        this.amountFrom = amountFrom;
-        this.amountTo = amountTo;
+    public CurrencyPair(String fromCurrency, String toCurrency, double fromAmount, double toAmount) {
+        this.fromCurrency = fromCurrency;
+        this.toCurrency = toCurrency;
+        this.fromAmount = fromAmount;
+        this.toAmount = toAmount;
     }
 
-    public String getFrom() {
-        return from;
+    public String getFromCurrency() {
+        return fromCurrency;
     }
 
-    public String getTo() {
-        return to;
+    public String getToCurrency() {
+        return toCurrency;
     }
 
-    public double getAmountFrom() {
-        return amountFrom;
+    public double getFromAmount() {
+        return fromAmount;
     }
 
-    public double getAmountTo() {
-        return amountTo;
+    public double getToAmount() {
+        return toAmount;
     }
 }

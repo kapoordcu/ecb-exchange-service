@@ -1,7 +1,6 @@
 package com.capital.scalable.infra;
 
 import com.capital.scalable.domain.LogMessage;
-import com.capital.scalable.domain.dto.ECBNode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,6 +47,7 @@ public class ECBExchangeClient {
                 sourceData.put( element.getString(propConfig.getCurrencyLabel()),
                                 element.getDouble(propConfig.getRateLabel()));
             }
+            sourceData.put(propConfig.getBaseCurrency(), 1.00);
         } catch (JSONException exp) {
             LOGGER.error(new LogMessage()
                     .with("error", "XML Parsing error")

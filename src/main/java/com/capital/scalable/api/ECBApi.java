@@ -1,6 +1,5 @@
 package com.capital.scalable.api;
 
-import com.capital.scalable.domain.CurrencyEnum;
 import com.capital.scalable.domain.CurrencyPair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

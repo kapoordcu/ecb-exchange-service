@@ -20,6 +20,9 @@ public class WebClientConfiguration {
     @Value("${client.ecb.currency:currency}")
     private String currencyLabel;
 
+    @Value("${client.ecb.base-currency:EUR}")
+    private String baseCurrency;
+
     public String getEcbURI() {
         return ecbURI;
     }
@@ -38,5 +41,9 @@ public class WebClientConfiguration {
 
     public String getCurrencyLabel() {
         return currencyLabel;
+    }
+
+    public String getBaseCurrency() {
+        return baseCurrency;
     }
 }

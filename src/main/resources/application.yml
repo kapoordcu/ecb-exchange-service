@@ -41,3 +41,4 @@ client:
     data-element: Cube
     rate: rate
     currency: currency
+    base-currency: EUR
