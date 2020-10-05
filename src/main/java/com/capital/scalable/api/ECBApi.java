@@ -17,7 +17,7 @@ public interface ECBApi {
     ResponseEntity<CurrencyPair> getExchangeRate(@PathVariable String from,
                                                               @PathVariable String to);
     @GetMapping(value = "/all-currencies")
-    ResponseEntity<List<CurrencyEnum>> getListOfCurrencies();
+    ResponseEntity<List<String>> getListOfCurrencies();
 
     @GetMapping(value = "/convert/{from}/{to}/{amount}")
     ResponseEntity<CurrencyPair> convertBetweenTwoCurrency(@PathVariable String from,

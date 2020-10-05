@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class ECBExchangeClient {
@@ -22,9 +22,9 @@ public class ECBExchangeClient {
     private final WebClientConfiguration propConfig;
     private final RestTemplate restTemplate = new RestTemplate();
 
-    private List<ECBNode> sourceData = new ArrayList<>();
+    private Map<String, Double> sourceData = new HashMap<>();
 
-    public List<ECBNode> getSourceData() {
+    public Map<String, Double> getSourceData() {
         return sourceData;
     }
 
@@ -45,9 +45,8 @@ public class ECBExchangeClient {
                     .get(propConfig.getDataNode());
             for (int i = 0; i < scores.length(); i++) {
                 JSONObject element = scores.getJSONObject(i);
-                sourceData.add(new ECBNode(element.getDouble(propConfig.getRateLabel()),
-                                            element.getString(propConfig.getCurrencyLabel()))
-                );
+                sourceData.put( element.getString(propConfig.getCurrencyLabel()),
+                                element.getDouble(propConfig.getRateLabel()));
             }
         } catch (JSONException exp) {
             LOGGER.error(new LogMessage()

@@ -6,24 +6,26 @@ public class CurrencyPair {
     private double amountFrom;
     private double amountTo;
 
-    public CurrencyPair(String from, String to) {
+    public CurrencyPair(String from, String to, double amountFrom, double amountTo) {
         this.from = from;
         this.to = to;
+        this.amountFrom = amountFrom;
+        this.amountTo = amountTo;
     }
 
     public String getFrom() {
         return from;
     }
 
-    public void setFrom(String from) {
-        this.from = from;
-    }
-
     public String getTo() {
         return to;
     }
 
-    public void setTo(String to) {
-        this.to = to;
+    public double getAmountFrom() {
+        return amountFrom;
+    }
+
+    public double getAmountTo() {
+        return amountTo;
     }
 }
