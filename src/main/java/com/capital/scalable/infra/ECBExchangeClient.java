@@ -13,9 +13,8 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.HashMap;
 
 @Component
 public class ECBExchangeClient {
@@ -24,7 +23,7 @@ public class ECBExchangeClient {
     private final RestTemplate restTemplate = new RestTemplate();
 
     private Map<String, Double> sourceData = new HashMap<>();
-    private Date lastModified = new Date();
+    private String lastModifiedRequestTime;
 
     public Map<String, Double> getSourceData() {
         return sourceData;
@@ -37,17 +36,28 @@ public class ECBExchangeClient {
 
     @Bean
     public boolean fetchDataFromECB() {
+        HttpEntity request = getHttpEntity();
         String ecbURI = propConfig.getEcbURI();
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.IF_MODIFIED_SINCE, lastModified.toString());
-        HttpEntity request = new HttpEntity(headers);
+
         ResponseEntity<String> ecbApiResponse = this.restTemplate.exchange(ecbURI, HttpMethod.GET, request, String.class, 1);
         if(ecbApiResponse.getStatusCode().is2xxSuccessful()) {
+            lastModifiedRequestTime = ecbApiResponse.getHeaders().get(HttpHeaders.LAST_MODIFIED).get(0);
             prepareMapDataFromECBWebsite(ecbApiResponse.getBody());
-            lastModified = new Date();
             return true;
+        } else if(HttpStatus.NOT_MODIFIED.equals(ecbApiResponse.getStatusCode())) {
+            LOGGER.error(new LogMessage()
+                    .with("info", "Data not modified")
+                    .with("last-modified", lastModifiedRequestTime)
+                    .with("HttpStatus", HttpStatus.NOT_MODIFIED).toString());
+            return ecbApiResponse.getStatusCode().equals(HttpStatus.NOT_MODIFIED);
         }
-        return ecbApiResponse.getStatusCode().equals(HttpStatus.NOT_MODIFIED);
+        return ecbApiResponse.getStatusCode().equals(HttpStatus.BAD_REQUEST);
+    }
+
+    private HttpEntity getHttpEntity() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.IF_MODIFIED_SINCE, lastModifiedRequestTime);
+        return new HttpEntity(headers);
     }
 
     public void prepareMapDataFromECBWebsite(final String ECB_RATES_XML) {
