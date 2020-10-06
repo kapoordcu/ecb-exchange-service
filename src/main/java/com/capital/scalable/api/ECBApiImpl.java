@@ -1,5 +1,6 @@
 package com.capital.scalable.api;
 
+import com.capital.scalable.domain.CurrencyFrequency;
 import com.capital.scalable.domain.CurrencyPair;
 import com.capital.scalable.domain.LogMessage;
 import com.capital.scalable.infra.ECBExchangeClient;
@@ -26,13 +27,13 @@ public class ECBApiImpl implements ECBApi {
 
     @Override
     public ResponseEntity<CurrencyPair> getECBRateAsComparedToEuro(String currency) {
-        client.fetchDataFromECB();
+        client.callExternalECBEndpoint();
         return getExchangeRate("EUR", currency);
     }
 
     @Override
     public ResponseEntity<CurrencyPair> getExchangeRate(String from, String to) {
-        client.fetchDataFromECB();
+        client.callExternalECBEndpoint();
         Map<String, Double> currencyRates = client.getSourceData();
         if(currencyRates.containsKey(from.toUpperCase()) && currencyRates.containsKey(to.toUpperCase())) {
             Double c1 = currencyRates.get(from.toUpperCase());
@@ -49,17 +50,17 @@ public class ECBApiImpl implements ECBApi {
     }
 
     @Override
-    public ResponseEntity<List<String>> getListOfCurrencies() {
-        client.fetchDataFromECB();
+    public ResponseEntity<List<CurrencyFrequency>> getListOfCurrencies() {
+        client.callExternalECBEndpoint();
         List<String> currencies = client.getSourceData().entrySet()
                 .stream().map(e -> e.getKey())
                 .collect(Collectors.toList());
-        return ResponseEntity.ok().body(currencies);
+        return null;
     }
 
     @Override
     public ResponseEntity<CurrencyPair> convertBetweenTwoCurrency(String from, String to, double amount) {
-        client.fetchDataFromECB();
+        client.callExternalECBEndpoint();
         Map<String, Double> currencyRates = client.getSourceData();
 
         if(currencyRates.containsKey(from.toUpperCase()) && currencyRates.containsKey(to.toUpperCase())) {

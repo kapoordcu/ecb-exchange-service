@@ -1,5 +1,6 @@
 package com.capital.scalable.api;
 
+import com.capital.scalable.domain.CurrencyFrequency;
 import com.capital.scalable.domain.CurrencyPair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,11 +13,12 @@ public interface ECBApi {
     @GetMapping(value = "/euro-rate/{currency}")
     ResponseEntity<CurrencyPair> getECBRateAsComparedToEuro(@PathVariable String currency);
 
-    @GetMapping(value = "/other-rate/{from}/{to}")
+    @GetMapping(value = "/exchange-rate/{from}/{to}")
     ResponseEntity<CurrencyPair> getExchangeRate(@PathVariable String from,
-                                                              @PathVariable String to);
+                                                 @PathVariable String to);
+
     @GetMapping(value = "/all-currencies")
-    ResponseEntity<List<String>> getListOfCurrencies();
+    ResponseEntity<List<CurrencyFrequency>> getListOfCurrencies();
 
     @GetMapping(value = "/convert/{from}/{to}/{amount}")
     ResponseEntity<CurrencyPair> convertBetweenTwoCurrency(@PathVariable String from,

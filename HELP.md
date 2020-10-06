@@ -1,22 +1,33 @@
 # Read Me First
-The following was discovered as part of building this project:
+* The application is called ecb-exchange-service and it calls an ECB endpoint(EXTERNAL) during system startup returning an XML form
+* The application also exposes other endpoints which can be consumed by a frontend application. 
+* [Swagger UI](http://localhost:9000/swagger-ui.html) - If running in docker replace localhost with ip address assigned by docker
 
-* The original package name 'com.capital.scalable.ecb-exchange-service' is invalid and this project uses 'com.capital.scalable.ecbexchangeservice' instead.
+## This application has 
+1) ONE External API to ECB for fetching current rates
+2) FIVE Internal API's for using the conversions
 
-# Getting Started
+## How to Run in local/Docker
+Simply start com.capital.scalable.LaunchMe
 
-### Reference Documentation
-For further reference, please consider the following sections:
+### User Stories
+As a user, who accesses this service through a user interface, The user
 
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/2.3.4.RELEASE/maven-plugin/reference/html/)
-* [Create an OCI image](https://docs.spring.io/spring-boot/docs/2.3.4.RELEASE/maven-plugin/reference/html/#build-image)
-* [Spring Web](https://docs.spring.io/spring-boot/docs/2.3.4.RELEASE/reference/htmlsingle/#boot-features-developing-web-applications)
+1. Can retrieve the ECB reference rate for a currency pair, e.g. USD/EUR or HUF/EUR with API signature as <font color="orange">/euro-rate/{currency}</font>
+2. Can retrieve an exchange rate for any other pairs, e.g. HUF/USD with <font color="orange">/exchange-rate/{from}/{to}</font> Note !! Also supports EURO here as well
+3. Can retrieve a list of supported currencies with <font color="orange">/all-currencies</font>
+4. Can convert an amount in a given currency to another with <font color="orange">/convert/{from}/{to}/{amount}</font>
+5. Can retrieve a link to a public website showing an interactive chart for a given currency pair.
 
-### Guides
-The following guides illustrate how to use some features concretely:
+### Caching
+1.  For any internal api call, the external API is checked for any rate changes from ECB. 
+2.  For optimization application uses <font color="darkorange">HttpHeaders.IF_MODIFIED_SINCE</font> so that the data processing is minimized and data is not matched on every internal API call
+3.  The data is fetched from ECB on application start up and further changes are updated only when ECB publishes new rates (200 OK, NOT 304)
 
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/bookmarks/)
+### Storage layer
+We need 2 Maps
+1) To store rates for different currency pairs.
+2) To know how many times the currency pair was requested in our API
+
+### Exceptional condition - use cases
 

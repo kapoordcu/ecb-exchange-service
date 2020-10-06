@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class WebClientConfiguration {
+public class ECBClientConfiguration {
     @Value("${client.ecb.daily-rate-uri:https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml}")
     private String ecbURI;
 

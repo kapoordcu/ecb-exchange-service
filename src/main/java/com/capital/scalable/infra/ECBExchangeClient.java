@@ -18,31 +18,32 @@ import java.util.HashMap;
 
 @Component
 public class ECBExchangeClient {
-    private static final Logger LOGGER = LoggerFactory.getLogger(WebClientConfiguration.class);
-    private final WebClientConfiguration propConfig;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ECBClientConfiguration.class);
+    private final ECBClientConfiguration propConfig;
     private final RestTemplate restTemplate = new RestTemplate();
-
-    private Map<String, Double> sourceData = new HashMap<>();
     private String lastModifiedRequestTime;
 
+    // Will be used as a data source of the application (replacement of database or other external storage)
+    private Map<String, Double> sourceData = new HashMap<>();
     public Map<String, Double> getSourceData() {
         return sourceData;
     }
 
     @Autowired
-    public ECBExchangeClient(WebClientConfiguration propConfig) {
+    public ECBExchangeClient(ECBClientConfiguration propConfig) {
         this.propConfig = propConfig;
     }
 
     @Bean
-    public boolean fetchDataFromECB() {
+    public boolean callExternalECBEndpoint() {
         HttpEntity request = getHttpEntity();
         String ecbURI = propConfig.getEcbURI();
 
-        ResponseEntity<String> ecbApiResponse = this.restTemplate.exchange(ecbURI, HttpMethod.GET, request, String.class, 1);
+        ResponseEntity<String> ecbApiResponse = this.restTemplate.exchange(ecbURI, HttpMethod.GET,
+                request, String.class, 1);
         if(ecbApiResponse.getStatusCode().is2xxSuccessful()) {
             lastModifiedRequestTime = ecbApiResponse.getHeaders().get(HttpHeaders.LAST_MODIFIED).get(0);
-            prepareMapDataFromECBWebsite(ecbApiResponse.getBody());
+            saveExchangeDataIntoInMemoryStorage(ecbApiResponse.getBody());
             return true;
         } else if(HttpStatus.NOT_MODIFIED.equals(ecbApiResponse.getStatusCode())) {
             LOGGER.error(new LogMessage()
@@ -60,7 +61,7 @@ public class ECBExchangeClient {
         return new HttpEntity(headers);
     }
 
-    public void prepareMapDataFromECBWebsite(final String ECB_RATES_XML) {
+    public void saveExchangeDataIntoInMemoryStorage(final String ECB_RATES_XML) {
         sourceData.clear();
         try {
             JSONArray scores = (JSONArray) XML.toJSONObject(ECB_RATES_XML)
@@ -76,7 +77,7 @@ public class ECBExchangeClient {
             sourceData.put(propConfig.getBaseCurrency(), 1.00);
         } catch (JSONException exp) {
             LOGGER.error(new LogMessage()
-                    .with("error", "XML Parsing error")
+                    .with("error", "source XML Parsing error")
                     .with("XML-data", ECB_RATES_XML)
                     .with("exception", exp).toString());
         }
