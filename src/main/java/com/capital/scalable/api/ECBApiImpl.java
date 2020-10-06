@@ -26,17 +26,13 @@ public class ECBApiImpl implements ECBApi {
 
     @Override
     public ResponseEntity<CurrencyPair> getECBRateAsComparedToEuro(String currency) {
-        if(ratesChanged()) {
-
-        }
+        client.fetchDataFromECB();
         return getExchangeRate("EUR", currency);
     }
 
     @Override
     public ResponseEntity<CurrencyPair> getExchangeRate(String from, String to) {
-        if(ratesChanged()) {
-
-        }
+        client.fetchDataFromECB();
         Map<String, Double> currencyRates = client.getSourceData();
         if(currencyRates.containsKey(from.toUpperCase()) && currencyRates.containsKey(to.toUpperCase())) {
             Double c1 = currencyRates.get(from.toUpperCase());
@@ -54,9 +50,7 @@ public class ECBApiImpl implements ECBApi {
 
     @Override
     public ResponseEntity<List<String>> getListOfCurrencies() {
-        if(ratesChanged()) {
-
-        }
+        client.fetchDataFromECB();
         List<String> currencies = client.getSourceData().entrySet()
                 .stream().map(e -> e.getKey())
                 .collect(Collectors.toList());
@@ -65,9 +59,7 @@ public class ECBApiImpl implements ECBApi {
 
     @Override
     public ResponseEntity<CurrencyPair> convertBetweenTwoCurrency(String from, String to, double amount) {
-        if(ratesChanged()) {
-
-        }
+        client.fetchDataFromECB();
         Map<String, Double> currencyRates = client.getSourceData();
 
         if(currencyRates.containsKey(from.toUpperCase()) && currencyRates.containsKey(to.toUpperCase())) {
@@ -82,10 +74,5 @@ public class ECBApiImpl implements ECBApi {
                 .with("from", from)
                 .with("to", to).toString());
         return ResponseEntity.notFound().build();
-    }
-
-
-    private boolean ratesChanged() {
-        return false;
     }
 }

@@ -9,9 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +24,7 @@ public class ECBExchangeClient {
     private final RestTemplate restTemplate = new RestTemplate();
 
     private Map<String, Double> sourceData = new HashMap<>();
+    private Date lastModified = new Date();
 
     public Map<String, Double> getSourceData() {
         return sourceData;
@@ -33,9 +36,22 @@ public class ECBExchangeClient {
     }
 
     @Bean
-    public void fetchDataFromECB() {
+    public boolean fetchDataFromECB() {
         String ecbURI = propConfig.getEcbURI();
-        final String ECB_RATES_XML = restTemplate.getForObject(ecbURI, String.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.IF_MODIFIED_SINCE, lastModified.toString());
+        HttpEntity request = new HttpEntity(headers);
+        ResponseEntity<String> ecbApiResponse = this.restTemplate.exchange(ecbURI, HttpMethod.GET, request, String.class, 1);
+        if(ecbApiResponse.getStatusCode().is2xxSuccessful()) {
+            prepareMapDataFromECBWebsite(ecbApiResponse.getBody());
+            lastModified = new Date();
+            return true;
+        }
+        return ecbApiResponse.getStatusCode().equals(HttpStatus.NOT_MODIFIED);
+    }
+
+    public void prepareMapDataFromECBWebsite(final String ECB_RATES_XML) {
+        sourceData.clear();
         try {
             JSONArray scores = (JSONArray) XML.toJSONObject(ECB_RATES_XML)
                     .getJSONObject(propConfig.getRootNode())
@@ -45,7 +61,7 @@ public class ECBExchangeClient {
             for (int i = 0; i < scores.length(); i++) {
                 JSONObject element = scores.getJSONObject(i);
                 sourceData.put( element.getString(propConfig.getCurrencyLabel()),
-                                element.getDouble(propConfig.getRateLabel()));
+                        element.getDouble(propConfig.getRateLabel()));
             }
             sourceData.put(propConfig.getBaseCurrency(), 1.00);
         } catch (JSONException exp) {
