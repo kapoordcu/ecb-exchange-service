@@ -19,7 +19,7 @@ public class LogMessage {
     public String toString() {
         StringBuilder content = new StringBuilder();
         data.entrySet()
-                .forEach(obj -> content.append("{" + obj.getKey() + "," + obj.getValue()  + "}" ).append("\n"));
+                .forEach(obj -> content.append("{ " + obj.getKey() + "," + obj.getValue()  + " }" ).append("\t"));
         return content.toString();
     }
 }

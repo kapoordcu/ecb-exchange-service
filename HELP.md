@@ -31,3 +31,9 @@ We need 2 Maps
 
 ### Exceptional condition - use cases
 
+
+// link to a public website showing an interactive chart for a given currency pair.
+// Frequency Map
+// Exceptional Conditions
+// Unit Tests
+// run with docker

@@ -40,10 +40,16 @@ public class ECBApiImpl implements ECBApi {
             Double c2 = currencyRates.get(to.toUpperCase());
             double amountConverted = Math.round((c2/c1) * 100.0) / 100.0;
             CurrencyPair pair = new CurrencyPair(from, to, 1.00, amountConverted);
+            LOGGER.info(new LogMessage()
+                    .with("action", "/exchange-rate/{from}/{to}")
+                    .with("from", from)
+                    .with("to", to)
+                    .with("amountConverted", amountConverted).toString());
             return new ResponseEntity<>(pair, HttpStatus.OK);
         }
         LOGGER.error(new LogMessage()
                 .with("error", "Currency Missing")
+                .with("action", "/exchange-rate/{from}/{to}")
                 .with("from", from)
                 .with("to", to).toString());
         return ResponseEntity.notFound().build();
@@ -68,10 +74,17 @@ public class ECBApiImpl implements ECBApi {
             Double c2 = currencyRates.get(to.toUpperCase());
             double amountConverted = Math.round((amount*(c2/c1)) * 100.0) / 100.0;
             CurrencyPair pair = new CurrencyPair(from, to, amount, amountConverted);
+            LOGGER.info(new LogMessage()
+                    .with("action", "/convert/{from}/{to}/{amount}")
+                    .with("amount", amount)
+                    .with("from", from)
+                    .with("to", to)
+                    .with("amountConverted", amountConverted).toString());
             return new ResponseEntity<>(pair, HttpStatus.OK);
         }
         LOGGER.error(new LogMessage()
-                .with("error", "Currency Missing")
+                .with("action", "/convert/{from}/{to}/{amount}")
+                .with("error", "Currency Not Supported")
                 .with("from", from)
                 .with("to", to).toString());
         return ResponseEntity.notFound().build();
