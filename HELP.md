@@ -3,9 +3,10 @@
 * The application also exposes other endpoints which can be consumed by a frontend application. 
 * [Swagger UI](http://localhost:9000/swagger-ui.html) - If running in docker replace localhost with ip address assigned by docker
 
-## This application has 
+## This application supports 
 1) ONE External API to ECB for fetching current rates
 2) FIVE Internal API's for using the conversions
+3) Currencies in lowerCase or upperCase
 
 ## How to Run in local/Docker
 Simply start com.capital.scalable.LaunchMe
@@ -14,9 +15,82 @@ Simply start com.capital.scalable.LaunchMe
 As a user, who accesses this service through a user interface, The user
 
 1. Can retrieve the ECB reference rate for a currency pair, e.g. USD/EUR or HUF/EUR with API signature as <font color="orange">/euro-rate/{currency}</font>
+
+    
+    Sample Response:
+    
+    {
+      "fromCurrency": "EUR",
+      "toCurrency": "jpy",
+      "fromAmount": 1,
+      "toAmount": 124.58
+    }
+    
 2. Can retrieve an exchange rate for any other pairs, e.g. HUF/USD with <font color="orange">/exchange-rate/{from}/{to}</font> Note !! Also supports EURO here as well
-3. Can retrieve a list of supported currencies with <font color="orange">/all-currencies</font>
+
+
+    Sample Response:
+    
+    {
+      "fromCurrency": "inr",
+      "toCurrency": "jpy",
+      "fromAmount": 1,
+      "toAmount": 1.44
+    }
+    
+3. Can retrieve a list of supported currencies with <font color="orange">/all-currencies</font>. Call this endpoint to also find out the frequency of currency conversion calls
+
+
+    Sample Response:
+    
+    [
+        {"currency":"CHF","accessCount":0},
+        {"currency":"HRK","accessCount":0},
+        {"currency":"MXN","accessCount":0},
+        {"currency":"ZAR","accessCount":0},
+        {"currency":"INR","accessCount":4},
+        {"currency":"CNY","accessCount":0},
+        {"currency":"THB","accessCount":0},
+        {"currency":"AUD","accessCount":1},
+        {"currency":"ILS","accessCount":0},
+        {"currency":"KRW","accessCount":0},
+        {"currency":"JPY","accessCount":2},
+        {"currency":"PLN","accessCount":0},
+        {"currency":"GBP","accessCount":0},
+        {"currency":"IDR","accessCount":0},
+        {"currency":"HUF","accessCount":0},
+        {"currency":"PHP","accessCount":0},
+        {"currency":"TRY","accessCount":0},
+        {"currency":"RUB","accessCount":0},
+        {"currency":"ISK","accessCount":0},
+        {"currency":"HKD","accessCount":0},
+        {"currency":"EUR","accessCount":4},
+        {"currency":"DKK","accessCount":0},
+        {"currency":"USD","accessCount":1},
+        {"currency":"CAD","accessCount":0},
+        {"currency":"MYR","accessCount":0},
+        {"currency":"BGN","accessCount":0},
+        {"currency":"NOK","accessCount":0},
+        {"currency":"RON","accessCount":0},
+        {"currency":"SGD","accessCount":0},
+        {"currency":"CZK","accessCount":0},
+        {"currency":"SEK","accessCount":0},
+        {"currency":"NZD","accessCount":0},
+        {"currency":"BRL","accessCount":0}
+    ]
+    
 4. Can convert an amount in a given currency to another with <font color="orange">/convert/{from}/{to}/{amount}</font>
+
+
+    Sample Response:
+    
+    {
+      "fromCurrency": "cny",
+      "toCurrency": "thb",
+      "fromAmount": 10,
+      "toAmount": 45.93
+    }
+    
 5. Can retrieve a link to a public website showing an interactive chart for a given currency pair.
 
 ### Caching
@@ -27,13 +101,13 @@ As a user, who accesses this service through a user interface, The user
 ### Storage layer
 We need 2 Maps
 1) To store rates for different currency pairs.
-2) To know how many times the currency pair was requested in our API
+2) To know how many times the currency was requested by our API, Every API call maintains the frequency of conversion for each currency in the pair.  Endpoint for this <font color="orange">/all-currencies</font>
+
 
 ### Exceptional condition - use cases
 
 
 // link to a public website showing an interactive chart for a given currency pair.
-// Frequency Map
 // Exceptional Conditions
 // Unit Tests
 // run with docker

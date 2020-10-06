@@ -2,18 +2,18 @@ package com.capital.scalable.domain;
 
 public class CurrencyFrequency {
     private String currency;
-    private int requestFrequency;
+    private int accessCount;
 
-    public CurrencyFrequency(String currency, int requestFrequency) {
+    public CurrencyFrequency(String currency, int accessCount) {
         this.currency = currency;
-        this.requestFrequency = requestFrequency;
+        this.accessCount = accessCount;
     }
 
     public String getCurrency() {
         return currency;
     }
 
-    public int getRequestFrequency() {
-        return requestFrequency;
+    public int getAccessCount() {
+        return accessCount;
     }
 }

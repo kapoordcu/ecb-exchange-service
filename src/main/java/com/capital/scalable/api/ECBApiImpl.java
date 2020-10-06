@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 public class ECBApiImpl implements ECBApi {
     private final ECBExchangeClient client;
     private static final Logger LOGGER = LoggerFactory.getLogger(ECBApiImpl.class);
+    private Map<String, Integer> frequencyMap = new HashMap<>();
 
     @Autowired
     public ECBApiImpl(ECBExchangeClient client) {
@@ -39,29 +42,31 @@ public class ECBApiImpl implements ECBApi {
             Double c1 = currencyRates.get(from.toUpperCase());
             Double c2 = currencyRates.get(to.toUpperCase());
             double amountConverted = Math.round((c2/c1) * 100.0) / 100.0;
-            CurrencyPair pair = new CurrencyPair(from, to, 1.00, amountConverted);
+            CurrencyPair pair = new CurrencyPair(from.toUpperCase(), to.toUpperCase(), 1.00, amountConverted);
             LOGGER.info(new LogMessage()
                     .with("action", "/exchange-rate/{from}/{to}")
-                    .with("from", from)
-                    .with("to", to)
+                    .with("from", from.toUpperCase())
+                    .with("to", to.toUpperCase())
                     .with("amountConverted", amountConverted).toString());
+            updateFrequencyMap(Arrays.asList(from, to));
             return new ResponseEntity<>(pair, HttpStatus.OK);
         }
         LOGGER.error(new LogMessage()
                 .with("error", "Currency Missing")
                 .with("action", "/exchange-rate/{from}/{to}")
-                .with("from", from)
-                .with("to", to).toString());
+                .with("from", from.toUpperCase())
+                .with("to", to.toUpperCase()).toString());
         return ResponseEntity.notFound().build();
     }
 
     @Override
     public ResponseEntity<List<CurrencyFrequency>> getListOfCurrencies() {
         client.callExternalECBEndpoint();
-        List<String> currencies = client.getSourceData().entrySet()
-                .stream().map(e -> e.getKey())
-                .collect(Collectors.toList());
-        return null;
+        return ResponseEntity.ok(client.getSourceData().entrySet()
+                .stream()
+                .map(cur -> new CurrencyFrequency(cur.getKey().toUpperCase(),
+                        frequencyMap.getOrDefault(cur.getKey().toUpperCase(), 0)))
+                .collect(Collectors.toList()));
     }
 
     @Override
@@ -73,20 +78,27 @@ public class ECBApiImpl implements ECBApi {
             Double c1 = currencyRates.get(from.toUpperCase());
             Double c2 = currencyRates.get(to.toUpperCase());
             double amountConverted = Math.round((amount*(c2/c1)) * 100.0) / 100.0;
-            CurrencyPair pair = new CurrencyPair(from, to, amount, amountConverted);
+            CurrencyPair pair = new CurrencyPair(from.toUpperCase(), to.toUpperCase(), amount, amountConverted);
             LOGGER.info(new LogMessage()
                     .with("action", "/convert/{from}/{to}/{amount}")
                     .with("amount", amount)
-                    .with("from", from)
-                    .with("to", to)
+                    .with("from", from.toUpperCase())
+                    .with("to", to.toUpperCase())
                     .with("amountConverted", amountConverted).toString());
+            updateFrequencyMap(Arrays.asList(from, to));
             return new ResponseEntity<>(pair, HttpStatus.OK);
         }
         LOGGER.error(new LogMessage()
                 .with("action", "/convert/{from}/{to}/{amount}")
                 .with("error", "Currency Not Supported")
-                .with("from", from)
-                .with("to", to).toString());
+                .with("from", from.toUpperCase())
+                .with("to", to.toUpperCase()).toString());
         return ResponseEntity.notFound().build();
+    }
+
+    private void updateFrequencyMap(List<String> currencies) {
+        currencies.stream()
+                .forEach(currency -> frequencyMap.put(currency.toUpperCase(),
+                        frequencyMap.getOrDefault(currency.toUpperCase(), 0) + 1));
     }
 }
