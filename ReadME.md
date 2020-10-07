@@ -107,8 +107,11 @@ We need 2 Maps
 2) To know how many times the currency was requested by our API, Every API call maintains the frequency of conversion for each currency in the pair.  Endpoint for this <font color="orange">/all-currencies</font>
 
 
-### Exceptional condition - use cases
+### Exceptional condition - other use cases
+1)  If you enter a currency whose keyword is not identified by ECB, for example typing Euro (not Eur), then you will get 404, To see list of currency supported check endpoint <font color="orange">/all-currencies</font>
+2)  From and To currency fields can be same
+3)  usD, USD, Usd ---> all are treated as USD
+4)  The graphical chart only shows the currency graph against Euro, Since ECB assumes euro as base currency
 
-// Exceptional Conditions
 // Unit Tests
 // run with docker

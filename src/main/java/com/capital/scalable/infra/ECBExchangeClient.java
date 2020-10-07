@@ -49,10 +49,6 @@ public class ECBExchangeClient {
             saveExchangeDataIntoInMemoryStorage(ecbApiResponse.getBody());
             return true;
         } else if(HttpStatus.NOT_MODIFIED.equals(ecbApiResponse.getStatusCode())) {
-            LOGGER.error(new LogMessage()
-                    .with("info", "Data not modified")
-                    .with("last-modified", lastModifiedRequestTime)
-                    .with("HttpStatus", HttpStatus.NOT_MODIFIED).toString());
             return ecbApiResponse.getStatusCode().equals(HttpStatus.NOT_MODIFIED);
         }
         return ecbApiResponse.getStatusCode().equals(HttpStatus.BAD_REQUEST);

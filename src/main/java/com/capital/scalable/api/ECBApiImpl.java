@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.awt.*;
+import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -48,18 +48,18 @@ public class ECBApiImpl implements ECBApi {
             double amountConverted = Math.round((c2/c1) * 100.0) / 100.0;
             CurrencyPair pair = new CurrencyPair(from.toUpperCase(), to.toUpperCase(), 1.00, amountConverted);
             LOGGER.info(new LogMessage()
-                    .with("action", "/exchange-rate/{from}/{to}")
+                    .with("uri", "/exchange-rate/{from}/{to}")
                     .with("from", from.toUpperCase())
                     .with("to", to.toUpperCase())
-                    .with("amountConverted", amountConverted).toString());
+                    .with("amount", amountConverted).toString());
             updateFrequencyMap(Arrays.asList(from, to));
             return new ResponseEntity<>(pair, HttpStatus.OK);
         }
         LOGGER.error(new LogMessage()
-                .with("error", "Currency Missing")
-                .with("action", "/exchange-rate/{from}/{to}")
+                .with("uri", "/exchange-rate/{from}/{to}")
                 .with("from", from.toUpperCase())
-                .with("to", to.toUpperCase()).toString());
+                .with("to", to.toUpperCase())
+                .with("error", "Currency Missing").toString());
         return ResponseEntity.notFound().build();
     }
 
@@ -84,19 +84,19 @@ public class ECBApiImpl implements ECBApi {
             double amountConverted = Math.round((amount*(c2/c1)) * 100.0) / 100.0;
             CurrencyPair pair = new CurrencyPair(from.toUpperCase(), to.toUpperCase(), amount, amountConverted);
             LOGGER.info(new LogMessage()
-                    .with("action", "/convert/{from}/{to}/{amount}")
-                    .with("amount", amount)
+                    .with("uri", "/convert/{from}/{to}/{amount}")
                     .with("from", from.toUpperCase())
                     .with("to", to.toUpperCase())
+                    .with("amount", amount)
                     .with("amountConverted", amountConverted).toString());
             updateFrequencyMap(Arrays.asList(from, to));
             return new ResponseEntity<>(pair, HttpStatus.OK);
         }
         LOGGER.error(new LogMessage()
-                .with("action", "/convert/{from}/{to}/{amount}")
-                .with("error", "Currency Not Supported")
+                .with("uri", "/convert/{from}/{to}/{amount}")
                 .with("from", from.toUpperCase())
-                .with("to", to.toUpperCase()).toString());
+                .with("to", to.toUpperCase())
+                .with("error", "Currency Not Supported").toString());
         return ResponseEntity.notFound().build();
     }
 
@@ -111,9 +111,9 @@ public class ECBApiImpl implements ECBApi {
             }
         } catch (IOException | URISyntaxException e) {
             LOGGER.error(new LogMessage()
-                    .with("action", "/trends/{currency}")
-                    .with("Exception", e)
-                    .with("currency", currency.toUpperCase()).toString());
+                    .with("uri", "/trends/{currency}")
+                    .with("currency", currency.toUpperCase())
+                    .with("Exception", e).toString());
         }
     }
 

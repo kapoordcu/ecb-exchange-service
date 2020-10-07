@@ -18,8 +18,10 @@ public class LogMessage {
     @Override
     public String toString() {
         StringBuilder content = new StringBuilder();
+        content.append("[ ");
         data.entrySet()
-                .forEach(obj -> content.append(obj.getKey() + "," + obj.getValue()).append("\t"));
+                .forEach(obj -> content.append(obj.getKey() + ":" + obj.getValue()).append(", "));
+        content.append(" ]");
         return content.toString();
     }
 }
