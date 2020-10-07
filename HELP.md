@@ -91,7 +91,10 @@ As a user, who accesses this service through a user interface, The user
       "toAmount": 45.93
     }
     
-5. Can retrieve a link to a public website showing an interactive chart for a given currency pair.
+5. Can retrieve a link to a public website showing an interactive chart for a given currency pair. <font color="orange">/trends/{currency}</font>
+    
+    
+    This endpoint opens the graphic chart from ECB website, depending on the currency you pass (uppercase/lowercase both supported)
 
 ### Caching
 1.  For any internal api call, the external API is checked for any rate changes from ECB. 
@@ -106,8 +109,6 @@ We need 2 Maps
 
 ### Exceptional condition - use cases
 
-
-// link to a public website showing an interactive chart for a given currency pair.
 // Exceptional Conditions
 // Unit Tests
 // run with docker

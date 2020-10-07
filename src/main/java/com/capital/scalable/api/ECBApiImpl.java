@@ -11,6 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -94,6 +98,23 @@ public class ECBApiImpl implements ECBApi {
                 .with("from", from.toUpperCase())
                 .with("to", to.toUpperCase()).toString());
         return ResponseEntity.notFound().build();
+    }
+
+    @Override
+    public void openCurrencyTrendInBrowser(String currency) {
+        try {
+            if(client.getSourceData().containsKey(currency.toUpperCase())) {
+                String graphLink = String.format(client.getPropConfig().getGraphLink(), currency.toLowerCase());
+                System.setProperty("java.awt.headless", "false");
+                Desktop desktop = Desktop.getDesktop();
+                desktop.browse(new URI(graphLink));
+            }
+        } catch (IOException | URISyntaxException e) {
+            LOGGER.error(new LogMessage()
+                    .with("action", "/trends/{currency}")
+                    .with("Exception", e)
+                    .with("currency", currency.toUpperCase()).toString());
+        }
     }
 
     private void updateFrequencyMap(List<String> currencies) {

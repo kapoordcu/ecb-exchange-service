@@ -28,6 +28,9 @@ public class ECBExchangeClient {
     public Map<String, Double> getSourceData() {
         return sourceData;
     }
+    public ECBClientConfiguration getPropConfig() {
+        return propConfig;
+    }
 
     @Autowired
     public ECBExchangeClient(ECBClientConfiguration propConfig) {

@@ -1,8 +1,6 @@
 spring:
   application:
     name: ecb-exchange-service
-  http:
-    log-request-details: true
 
   jackson:
     default-property-inclusion: non_null
@@ -10,8 +8,8 @@ spring:
       WRITE_DATES_AS_TIMESTAMPS: false
     deserialization:
       FAIL_ON_UNKNOWN_PROPERTIES: false
-server:
-  port: 9000
+#server:
+#  port: 9000
 
 management:
   server:
@@ -42,3 +40,4 @@ client:
     rate: rate
     currency: currency
     base-currency: EUR
+    graph: https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-%s.en.html

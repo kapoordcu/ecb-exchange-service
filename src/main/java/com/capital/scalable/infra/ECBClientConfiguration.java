@@ -23,6 +23,9 @@ public class ECBClientConfiguration {
     @Value("${client.ecb.base-currency:EUR}")
     private String baseCurrency;
 
+    @Value("${client.ecb.graph:https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-%s.en.html}")
+    private String graphLink;
+
     public String getEcbURI() {
         return ecbURI;
     }
@@ -45,5 +48,9 @@ public class ECBClientConfiguration {
 
     public String getBaseCurrency() {
         return baseCurrency;
+    }
+
+    public String getGraphLink() {
+        return graphLink;
     }
 }

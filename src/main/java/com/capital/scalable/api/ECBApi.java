@@ -24,4 +24,7 @@ public interface ECBApi {
     ResponseEntity<CurrencyPair> convertBetweenTwoCurrency(@PathVariable String from,
                                                             @PathVariable String to,
                                                             @PathVariable double amount);
+
+    @GetMapping(value = "/trends/{currency}")
+    void openCurrencyTrendInBrowser(@PathVariable String currency);
 }
