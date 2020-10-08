@@ -1,14 +1,14 @@
 # Read Me First
 * The application is called ecb-exchange-service and it calls an ECB endpoint(EXTERNAL) during system startup returning an XML form
 * The application also exposes other endpoints which can be consumed by a frontend application. 
-* [Swagger UI](http://localhost:9000/swagger-ui.html) - If running in docker replace localhost with ip address assigned by docker
+* [Swagger UI](http://localhost:9000/swagger-ui.html) - If running in docker replace port with assigned by docker
 
 ## This application supports 
 1) ONE External API to ECB for fetching current rates
 2) FIVE Internal API's for using the conversions
 3) Currencies in lowerCase or upperCase
 
-## How to Run in local/Docker
+## How to Run in local
 Simply start com.capital.scalable.LaunchMe
 
 ### User Stories
@@ -97,8 +97,8 @@ As a user, who accesses this service through a user interface, The user
     This endpoint opens the graphic chart from ECB website, depending on the currency you pass (uppercase/lowercase both supported)
 
 ### Caching
-1.  For any internal api call, the external API is checked for any rate changes from ECB. 
-2.  For optimization application uses <font color="darkorange">HttpHeaders.IF_MODIFIED_SINCE</font> so that the data processing is minimized and data is not matched on every internal API call
+1.  For any internal api call, the external API is checked for any updates from ECB. 
+2.  For optimization application uses <font color="darkorange">HttpHeaders.IF_MODIFIED_SINCE</font> so that the data processing is minimized and data is not processed on every internal API call
 3.  The data is fetched from ECB on application start up and further changes are updated only when ECB publishes new rates (200 OK, NOT 304)
 
 ### Storage layer
@@ -113,24 +113,39 @@ We need 2 Maps
 3)  usD, USD, Usd ---> all are treated as USD
 4)  The graphical chart only shows the currency graph against Euro, Since ECB assumes euro as base currency
 
-# DOCKER CONTEXT
+# DOCKER COMPOSE
+The docker command to run in A or B is same, only docker file differs
 
-### A. Using Dockerfile
-a)  Use your machine to build the application (using mvn clean package)
+    i) docker-compose up
+    ii) docker-compose ps --> will give the IP address assigner by docker to your application
+    ii) Access the application on http://localhost:32768/swagger-ui.html
+    
+### A (Make sure artifact exists in your local machine under target/)
+a)  Use your Local machine to build the application (using mvn package)
 b)  Use Docker to run the application
 
-Steps
+Dockerfile for A
 
+    FROM openjdk:10-jre-slim
+    COPY ./target/ecb-exchange-service-0.0.1-SNAPSHOT.jar /usr/src/ecb.jar
+    WORKDIR /usr/src
+    EXPOSE 50590
+    CMD ["java", "-jar", "ecb.jar"]
     
-    i) mvn clean package [ This will make a jar artifact in target folder]
-    ii)  docker build -t {MY_IMAGE_TAG} .  [This will build the docker image using Dockerfile]
-    iii) docker run -p 8080:8080 {MY_IMAGE_TAG}
-    iv) Access the application on http://localhost:8080/swagger-ui.html
 
-### B. Docker Compose - A Cake walk
-docker-compose.yml is provided in the project
+### B
 
+a)  Use Docker machine to build the application 
+b)  Use Docker to run the application
 
-    i) Run 'docker-compose up' [It will expose the container’s port to the host in a port 
-    which we can find using docker-compose ps which will give output like 0.0.0.0:32768->8080/tcp ]
-    ii) Access the application on http://localhost:32768/swagger-ui.html
+Dockerfile for B
+
+    FROM maven:3.5.4-jdk-10-slim
+    WORKDIR /usr/src/ecb
+    COPY . /usr/src/ecb
+    RUN mvn package
+    
+    WORKDIR /usr/src/ecb
+    RUN cp /usr/src/ecb/target/*.jar ./ecb.jar
+    EXPOSE 8080
+    CMD ["java", "-jar", "ecb.jar"]
