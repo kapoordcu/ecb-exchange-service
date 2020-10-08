@@ -1,5 +1,5 @@
-FROM maven:3.5-jdk-8
-WORKDIR '/app'
-COPY target/ecb-exchange-service-0.0.1-SNAPSHOT.jar /app/ecb-exchange-service-0.0.1-SNAPSHOT.jar
+FROM openjdk:10-jre-slim
+COPY ./target/ecb-exchange-service-0.0.1-SNAPSHOT.jar /usr/src/ecb.jar
+WORKDIR /usr/src
 EXPOSE 50590
-ENTRYPOINT ["java","-jar","/app/ecb-exchange-service-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "ecb.jar"]

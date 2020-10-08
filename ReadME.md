@@ -113,5 +113,24 @@ We need 2 Maps
 3)  usD, USD, Usd ---> all are treated as USD
 4)  The graphical chart only shows the currency graph against Euro, Since ECB assumes euro as base currency
 
-// Unit Tests
-// run with docker
+# DOCKER CONTEXT
+
+### A. Using Dockerfile
+a)  Use your machine to build the application (using mvn clean package)
+b)  Use Docker to run the application
+
+Steps
+
+    
+    i) mvn clean package [ This will make a jar artifact in target folder]
+    ii)  docker build -t {MY_IMAGE_TAG} .  [This will build the docker image using Dockerfile]
+    iii) docker run -p 8080:8080 {MY_IMAGE_TAG}
+    iv) Access the application on http://localhost:8080/swagger-ui.html
+
+### B. Docker Compose - A Cake walk
+docker-compose.yml is provided in the project
+
+
+    i) Run 'docker-compose up' [It will expose the container’s port to the host in a port 
+    which we can find using docker-compose ps which will give output like 0.0.0.0:32768->8080/tcp ]
+    ii) Access the application on http://localhost:32768/swagger-ui.html
