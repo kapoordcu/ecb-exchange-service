@@ -149,3 +149,13 @@ Dockerfile for B
     RUN cp /usr/src/ecb/target/*.jar ./ecb.jar
     EXPOSE 8080
     CMD ["java", "-jar", "ecb.jar"]
+    
+    
+.- To remove all docker installation (including prior dockers) do (in terminal):
+docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)
+docker rmi -f $(docker images -q)
+docker volume prune
+
+### TESTING
+Due to time limit, simple unit tests for internal APIs are added ONLY
