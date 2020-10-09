@@ -101,13 +101,15 @@ public class ECBApiImpl implements ECBApi {
     }
 
     @Override
-    public void openCurrencyTrendInBrowser(String currency) {
+    public URI openCurrencyTrendInBrowser(String currency) {
+        URI uri = null;
         try {
             if(client.getSourceData().containsKey(currency.toUpperCase())) {
                 String graphLink = String.format(client.getPropConfig().getGraphLink(), currency.toLowerCase());
                 System.setProperty("java.awt.headless", "false");
                 Desktop desktop = Desktop.getDesktop();
-                desktop.browse(new URI(graphLink));
+                uri = new URI(graphLink);
+                desktop.browse(uri);
             }
         } catch (IOException | URISyntaxException e) {
             LOGGER.error(new LogMessage()
@@ -115,6 +117,7 @@ public class ECBApiImpl implements ECBApi {
                     .with("currency", currency.toUpperCase())
                     .with("Exception", e).toString());
         }
+        return uri;
     }
 
     private void updateFrequencyMap(List<String> currencies) {

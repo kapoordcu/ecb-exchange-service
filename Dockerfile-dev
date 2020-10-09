@@ -1,0 +1,9 @@
+FROM maven:3.5.4-jdk-10-slim
+WORKDIR /usr/src/ecb
+COPY . /usr/src/ecb
+RUN mvn package
+
+WORKDIR /usr/src/ecb
+RUN cp /usr/src/ecb/target/*.jar ./ecb.jar
+EXPOSE 8080
+CMD ["java", "-jar", "ecb.jar"]

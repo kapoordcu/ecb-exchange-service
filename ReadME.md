@@ -8,8 +8,27 @@
 2) FIVE Internal API's for using the conversions
 3) Currencies in lowerCase or upperCase
 
-## How to Run in local
+## How to Run: Local machine
 Simply start com.capital.scalable.LaunchMe
+## How to Run: DOCKER COMPOSE
+The docker command to run in A or B is same, only docker file differs
+
+    i) docker-compose up
+    ii) docker-compose ps --> will give the IP address assigner by docker to your application
+    ii) Access the application on http://localhost:32768/swagger-ui.html
+    
+TWO WAYS TO DO THIS
+
+    ### A (Make sure artifact exists in your local machine under target/)
+    a)  Use your Local machine to build the application (using mvn package)
+    b)  Use Docker to run the application
+    
+    NOTE: "dockerfile: Dockerfile" set in docker-compose.yml BY DEFAULT 
+    
+    ### B (Change dockerfile name in docker-compose.yml to "dockerfile: Dockerfile-dev"
+    a)  Use Docker machine to build the application 
+    b)  Use Docker to run the application
+    Note: A bigger image will be created in this case since you are building the application in container
 
 ### User Stories
 As a user, who accesses this service through a user interface, The user
@@ -113,49 +132,12 @@ We need 2 Maps
 3)  usD, USD, Usd ---> all are treated as USD
 4)  The graphical chart only shows the currency graph against Euro, Since ECB assumes euro as base currency
 
-# DOCKER COMPOSE
-The docker command to run in A or B is same, only docker file differs
 
-    i) docker-compose up
-    ii) docker-compose ps --> will give the IP address assigner by docker to your application
-    ii) Access the application on http://localhost:32768/swagger-ui.html
-    
-### A (Make sure artifact exists in your local machine under target/)
-a)  Use your Local machine to build the application (using mvn package)
-b)  Use Docker to run the application
+### TESTING
+Due to time limit, simple unit tests for internal APIs are added ONLY
 
-Dockerfile for A
-
-    FROM openjdk:10-jre-slim
-    COPY ./target/ecb-exchange-service-0.0.1-SNAPSHOT.jar /usr/src/ecb.jar
-    WORKDIR /usr/src
-    EXPOSE 50590
-    CMD ["java", "-jar", "ecb.jar"]
-    
-
-### B
-
-a)  Use Docker machine to build the application 
-b)  Use Docker to run the application
-
-Dockerfile for B
-
-    FROM maven:3.5.4-jdk-10-slim
-    WORKDIR /usr/src/ecb
-    COPY . /usr/src/ecb
-    RUN mvn package
-    
-    WORKDIR /usr/src/ecb
-    RUN cp /usr/src/ecb/target/*.jar ./ecb.jar
-    EXPOSE 8080
-    CMD ["java", "-jar", "ecb.jar"]
-    
-    
 .- To remove all docker installation (including prior dockers) do (in terminal):
 docker stop $(docker ps -a -q)
 docker rm $(docker ps -a -q)
 docker rmi -f $(docker images -q)
 docker volume prune
-
-### TESTING
-Due to time limit, simple unit tests for internal APIs are added ONLY

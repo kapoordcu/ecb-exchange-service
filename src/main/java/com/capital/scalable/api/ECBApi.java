@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.net.URI;
 import java.util.List;
 
 public interface ECBApi {
@@ -26,5 +27,5 @@ public interface ECBApi {
                                                             @PathVariable double amount);
 
     @GetMapping(value = "/trends/{currency}")
-    void openCurrencyTrendInBrowser(@PathVariable String currency);
+    URI openCurrencyTrendInBrowser(@PathVariable String currency);
 }

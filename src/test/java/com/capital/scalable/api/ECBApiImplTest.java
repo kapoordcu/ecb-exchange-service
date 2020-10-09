@@ -12,6 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,6 +102,19 @@ public class ECBApiImplTest {
         assertTrue(AMOUNT.equals(responseEntity.getBody().getFromAmount()));
         assertTrue(expected.equals(responseEntity.getBody().getToAmount()));
 
+    }
+
+    @Test
+    public void convertBetweenTwoCurrencyWIthNonExistingCurrency() {
+        ResponseEntity<CurrencyPair> responseEntity = api.convertBetweenTwoCurrency(KKK, JPY, AMOUNT);
+        assertTrue(HttpStatus.NOT_FOUND.equals(responseEntity.getStatusCode()));
+        assertTrue(responseEntity.getBody() == null);
+    }
+
+    @Test
+    public void openBrowserWithWrongCurrency() {
+        URI responseEntity = api.openCurrencyTrendInBrowser(KKK);
+        assertTrue(responseEntity == null);
     }
 
 }
