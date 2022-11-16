@@ -1,8 +1,6 @@
 package com.capital.scalable.api;
 
-import com.capital.scalable.domain.CurrencyFrequency;
-import com.capital.scalable.domain.CurrencyPair;
-import com.capital.scalable.infra.ECBExchangeClient;
+import com.capital.scalable.infra.FESExchangeClient;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +20,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ECBApiImplTest {
+public class FESApiImplTest {
 
     private static final String EUR = "EUR";
     private static final String INR = "INR";
@@ -37,9 +35,9 @@ public class ECBApiImplTest {
     private static final Double AMOUNT = 3.0;
 
     @Mock
-    private ECBExchangeClient client;
+    private FESExchangeClient client;
     @InjectMocks
-    private ECBApiImpl api;
+    private FESApiImpl api;
 
     private Map<String, Double> currencyMap = new HashMap<>();
 

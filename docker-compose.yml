@@ -1,14 +1,25 @@
-version: '2.2'
+version: '3'
 services:
-  ecb:
+  redis:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes:
+      - redis:/data
+
+  fes:
     build:
       context: ./
       dockerfile: Dockerfile
-    image: ecbweb
+    image: fesweb
     ports:
       - 8080
     networks:
       - network1
+    depends_on:
+      - redis
 
 networks:
   network1:

@@ -1,9 +1,16 @@
 spring:
-  application:
-    name: ecb-exchange-service
-#server:
-#  port: 9000
+  datasource:
+    url: jdbc:h2:mem:fes
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+  jpa:
+    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console.enabled: true
 
+  #server:
+#  port: 9000
 management:
   server:
     port: 9001
@@ -11,12 +18,13 @@ management:
     health:
       show-details: always
 
-client:
-  ecb:
-    daily-rate-uri: https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml
-    root-element: gesmes:Envelope
-    data-element: Cube
-    rate: rate
-    currency: currency
-    base-currency: EUR
-    graph: https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-%s.en.html
+provider:
+  api:
+    schedule:
+      frequency: "*/1 * * * * *"
+    fetch-events:
+      uri: https://provider.code-challenge.feverup.com/api/events
+      root-node: eventList
+      output-node: output
+      base-event-node: base_event
+      event-node: event

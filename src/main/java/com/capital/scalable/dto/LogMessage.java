@@ -1,4 +1,4 @@
-package com.capital.scalable.domain;
+package com.capital.scalable.dto;
 
 import java.util.HashMap;
 import java.util.Map;
