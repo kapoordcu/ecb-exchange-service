@@ -1,6 +1,6 @@
 package com.capital.scalable.api;
 
-import com.capital.scalable.infra.FESExchangeClient;
+import com.capital.scalable.infra.RestClient;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +35,7 @@ public class FESApiImplTest {
     private static final Double AMOUNT = 3.0;
 
     @Mock
-    private FESExchangeClient client;
+    private RestClient client;
     @InjectMocks
     private FESApiImpl api;
 

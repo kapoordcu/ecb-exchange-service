@@ -1,6 +1,6 @@
 package com.capital.scalable.api;
 
-import com.capital.scalable.dto.EventsDto;
+import com.capital.scalable.domain.dto.EventsDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

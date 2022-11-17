@@ -1,6 +1,6 @@
 package com.capital.scalable.api;
 
-import com.capital.scalable.dto.EventsDto;
+import com.capital.scalable.domain.dto.EventsDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

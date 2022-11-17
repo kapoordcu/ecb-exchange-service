@@ -21,7 +21,7 @@ management:
 provider:
   api:
     schedule:
-      frequency: "*/1 * * * * *"
+      frequency: "*/60 * * * * *"
     fetch-events:
       uri: https://provider.code-challenge.feverup.com/api/events
       root-node: eventList

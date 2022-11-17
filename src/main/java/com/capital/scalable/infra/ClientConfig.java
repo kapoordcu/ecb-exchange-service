@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Getter
-public class FESClientConfiguration {
+public class ClientConfig {
     @Value("${client.fes.current-events.uri:https://provider.code-challenge.feverup.com/api/events}")
     private String externalEvents;
 
@@ -17,7 +17,7 @@ public class FESClientConfiguration {
     private String outputNode;
 
     @Value("${client.fes.base-event-node:base_event}")
-    private String baseEvent;
+    private String baseEventNode;
 
     @Value("${client.fes.event-node:event}")
     private String eventNode;

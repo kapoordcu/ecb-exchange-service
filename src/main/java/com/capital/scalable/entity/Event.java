@@ -8,29 +8,27 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "event")
 public class Event implements Serializable {
-
     @Id
     @NotNull
     @Column(name = "id", unique = true)
-    private String id;
-
+    private UUID id; // UUID generated from Combination Key (CombiKey.java)
+    @Column
+    private int capacity;
+    @Column
+    private double price;
     @Column
     private String title;
     @Column
-    private LocalDate start_date;
+    private boolean sell_mode;
     @Column
-    private LocalTime start_time;
+    private LocalDateTime event_start_date;
     @Column
-    private LocalDate end_date;
-    @Column
-    private LocalTime end_time;
-    @Column
-    private double min_price;
-    @Column
-    private double max_price;
+    private LocalDateTime event_end_date;
 }

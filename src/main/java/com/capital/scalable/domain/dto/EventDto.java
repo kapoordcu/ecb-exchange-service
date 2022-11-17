@@ -1,15 +1,16 @@
-package com.capital.scalable.dto;
+package com.capital.scalable.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.UUID;
 
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EventDto {
-    private String id;
+    private UUID id;
     private String title;
     private LocalDate start_date;
     private LocalTime start_time;
